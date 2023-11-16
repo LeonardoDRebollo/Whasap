@@ -10,6 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -33,26 +36,27 @@ public class Cliente extends javax.swing.JFrame {
            usuario = nombreUsuario;
            LbUsuario.setText(usuario);
 
-        btnEnviar.addActionListener((ActionEvent e) -> {
-            String mensaje = Mensajetxt.getText();
-            if (!"".equals(mensaje)) {                 
-                try {
-                    Socket conecta = new Socket("192.168.56.1", 5211);
-                    DataOutputStream envia = new DataOutputStream(conecta.getOutputStream());
-                    String paquete = usuario + ": " + Mensajetxt.getText();
-                    envia.writeUTF(paquete);
-                    envia.close();
-                    conecta.close();
-                } catch (UnknownHostException e0) {
-                    // TODO Auto-generated catch block
-                    e0.printStackTrace();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+
+        
+             
+        
+        TbConexion.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                // Verificar si la selección está cambiando y no está ajustando
+                if (!e.getValueIsAdjusting()) {
+                    // Obtener el índice de la fila seleccionada
+                    int filaSeleccionada = TbConexion.getSelectedRow();
+
+                    // Obtener el valor de la segunda columna de la fila seleccionada
+                    Object valor = TbConexion.getValueAt(filaSeleccionada, 1);
+
+                    // Establecer el valor en el JTextField
+                    TxtDestino.setText(valor.toString());
                 }
-                Mensajetxt.setText("");
             }
         });
+
     }
 
     @SuppressWarnings("unchecked")
@@ -71,8 +75,7 @@ public class Cliente extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         TbConexion = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        TxtDestino = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -183,29 +186,23 @@ public class Cliente extends javax.swing.JFrame {
         ));
         jScrollPane5.setViewportView(TbConexion);
 
-        jButton1.setText("Seleccionar");
-
         jLabel1.setText("Seleccionar destino");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jTextField1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(66, 66, 66))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(66, 66, 66))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TxtDestino, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,9 +210,7 @@ public class Cliente extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(TxtDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
@@ -281,10 +276,10 @@ public class Cliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane2))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,7 +312,7 @@ public class Cliente extends javax.swing.JFrame {
     private void BtnCerrarSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCerrarSActionPerformed
         Socket conecta;
         try {
-            conecta = new Socket("192.168.56.1", 5212);
+            conecta = new Socket("192.168.1.68", 5212);
             DataOutputStream envia = new DataOutputStream(conecta.getOutputStream());
             String paquete = usuario + ",se ha desconectado";
             envia.writeUTF(paquete);
@@ -333,7 +328,28 @@ public class Cliente extends javax.swing.JFrame {
     }//GEN-LAST:event_BtnCerrarSActionPerformed
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:    
+        if("".equals(TxtDestino.getText())){
+               JOptionPane.showMessageDialog(null, "Seleccione un usuario para enviar");
+        }
+        else{
+                 try {
+				Socket conecta = new Socket("192.168.1.68",5211);
+				DataOutputStream manda = new DataOutputStream(conecta.getOutputStream());
+                                String cadena = usuario + ": " + Mensajetxt.getText() + ',' + TxtDestino.getText();
+				manda.writeUTF(cadena);
+                                Mensajetxt.setText("");
+				manda.close();
+                                conecta.close();
+			} catch (UnknownHostException e0) {
+				// TODO Auto-generated catch block
+				e0.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
+        }
+
     }//GEN-LAST:event_btnEnviarActionPerformed
 
     public static void main(String args[]) {
@@ -352,9 +368,9 @@ public class Cliente extends javax.swing.JFrame {
     private javax.swing.JLabel LbUsuario;
     private javax.swing.JTextArea Mensajetxt;
     private javax.swing.JTable TbConexion;
+    private javax.swing.JTextField TxtDestino;
     private javax.swing.JTable VentanaDeChat;
     private javax.swing.JButton btnEnviar;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -368,6 +384,5 @@ public class Cliente extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

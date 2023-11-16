@@ -59,10 +59,6 @@ public class Login extends javax.swing.JFrame {
                     } else {
                         Password = "";
                     }
-                    System.out.println("Username from file: " + Username);
-                    System.out.println("Password from file: " + Password);
-                    System.out.println("User input: " + user);
-                    System.out.println("Password input: " + pass);
                     if (user.trim().equalsIgnoreCase(Username) && pass.equals(Password)) {
                         return true; // Credenciales correctas
                     }
@@ -118,8 +114,10 @@ public class Login extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
+        txtPassword.setText("123");
         txtPassword.setToolTipText("Contraseña");
 
+        txtUsername.setText("leni");
         txtUsername.setToolTipText("Usuario");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -243,7 +241,7 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Acceso autorizado");
             Socket conexion;
             try {
-                conexion = new Socket("192.168.56.1", 5212);
+                conexion = new Socket("192.168.1.68", 5212);
                 DataOutputStream envia = new DataOutputStream(conexion.getOutputStream());
                 envia.writeUTF(txtUsername.getText());
                 envia.close();

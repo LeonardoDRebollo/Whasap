@@ -28,24 +28,13 @@ public class HiloActivos extends Thread {
         try (Socket conexion = servidor.accept();
              DataInputStream recibe = new DataInputStream(conexion.getInputStream())) {
             String texto = recibe.readUTF();
-            String[] partes = texto.split(",");
-            if (partes.length > 1) {
-                // Verifica y elimina la duplicidad de tablas en la segunda columna
-                for (int fila = 0; fila < modeloUserConectados.getRowCount(); fila++) {
-                    Object valorColumnaDos = modeloUserConectados.getValueAt(fila, 0);
-                    if (valorColumnaDos != null && valorColumnaDos.toString().equals(partes[0])) {
-                        modeloUserConectados.removeRow(fila);
-                        break;
-                    }
-                }
-            }
-                 else{                            
-                       if (!elementosUnicos.contains(texto)) {
+            System.out.println(texto);
+             String[] partes = texto.split(",");
+            if (!elementosUnicos.contains(texto)) {
                        // Agregar la fila y el elemento al conjunto
                        elementosUnicos.add(texto);
                        modeloUserConectados.addRow(new Object[]{partes[0],partes[1]});
                      }
-                   }
                }
            }
         } catch (IOException e) {  
